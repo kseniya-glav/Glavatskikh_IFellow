@@ -1,93 +1,139 @@
 package hw3;
 
-import config.WebHooks;
-import org.junit.jupiter.api.*;
+import config.Props;
+import hook.WebHooks;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import pages.JiraCardTask;
 import pages.JiraPageAuth;
 import pages.JiraPageProject;
+import steps.TestStep;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 public class OneTestCase extends WebHooks {
-
-    @AfterEach
-    public void ResTest() {
-        System.out.println("Выполнено");
-    }
 
     private final JiraPageAuth jiraPageAuth = new JiraPageAuth();
     private final JiraPageProject jiraPageProject = new JiraPageProject();
     private final JiraCardTask jiraCardTask = new JiraCardTask();
-
-    private final String userName = "AT9";
-    private final String userPass = "Qwerty123";
-
-    private final String nameTask = "TestSeleniumATHomework";
-    private final String statusTask = "Сделать";
-    private final String fixVersion = "Version 2.0";
-    private final String theme = "Провести по всем статусам";
-    private final String typeTask = "Ошибка";
-
+    private final TestStep testStep = new TestStep();
 
     @Test
-    @Order(1)
     public void checkAuth() {
         System.out.println("1 Тест входа в Jira");
-        jiraPageAuth.inputUserName(userName);
-        jiraPageAuth.inputUserPass(userPass);
-        Assertions.assertNotNull(jiraPageAuth.inputLogin());
+
+        Assertions.assertTimeout(Duration.ofSeconds(10), () -> {
+            testStep.checkAuth(Props.props.userLogin(), Props.props.userPassword());
+        });
     }
 
     @Test
-    @Order(2)
     public void goProject() {
         System.out.println("2 Тест перехода во вкладку 'Проекты'");
-        Assertions.assertNotNull(jiraPageProject.refProject());
+
+        Assertions.assertTimeout(Duration.ofSeconds(20), () -> {
+            testStep.checkAuth(Props.props.userLogin(), Props.props.userPassword());
+        });
+
+        Assertions.assertTimeout(Duration.ofSeconds(10), () -> {
+            testStep.goProject();
+            testStep.refProject();
+        });
+
     }
 
     @Test
-    @Order(3)
-    public void createTasks() throws InterruptedException {
+    public void createTasks() {
         System.out.println("3 Тест создания задачи во вкладке 'Проекты' -> 'Задачи'");
-        int countBefore = jiraPageProject.taskCount();
-        jiraPageProject.createTasks();
-        TimeUnit.SECONDS.sleep(3);
-        int countAfter = jiraPageProject.taskCount();
+
+        Assertions.assertTimeout(Duration.ofSeconds(20), () -> {
+            testStep.checkAuth(Props.props.userLogin(), Props.props.userPassword());
+        });
+
+        Assertions.assertTimeout(Duration.ofSeconds(10), () -> {
+            testStep.goProject();
+            testStep.refProject();
+        });
+
+        int countBefore = testStep.taskCount();
+        testStep.createTasks();
+        int countAfter = testStep.taskCount();
 
         Assertions.assertEquals(countAfter - countBefore, 1);
 
     }
 
     @Test
-    @Order(4)
-    public void goTask() throws InterruptedException {
-        System.out.println("4 Тест перехода к задаче '" + nameTask + "'");
-        jiraPageProject.searchTask(nameTask);
-        System.out.println("Проверка задачи на статус '" + statusTask + "' и версию '" + fixVersion + "'");
+    public void goTask() {
+        System.out.println("4 Тест перехода к задаче '" + Props.props.nameTask() + "'");
+
+        Assertions.assertTimeout(Duration.ofSeconds(20), () -> {
+            testStep.checkAuth(Props.props.userLogin(), Props.props.userPassword());
+        });
+
+        Assertions.assertTimeout(Duration.ofSeconds(10), () -> {
+            testStep.goProject();
+            testStep.refProject();
+        });
+
+        int countBefore = testStep.taskCount();
+        testStep.createTasks();
+        int countAfter = testStep.taskCount();
+
+        Assertions.assertEquals(countAfter - countBefore, 1);
+
+
+        testStep.goTask(Props.props.nameTask());
+
+        System.out.println("Проверка задачи на статус '" + Props.props.statusTask() + "' и версию '" + Props.props.fixVersion() + "'");
         Assertions.assertAll("Статус задачи и версия",
-                () -> Assertions.assertEquals(jiraCardTask.status().trim(), statusTask),
-                () -> Assertions.assertEquals(jiraCardTask.fixVersion().trim(), fixVersion)
+                () -> Assertions.assertEquals(testStep.statusTask(), Props.props.statusTask()),
+                () -> Assertions.assertEquals(testStep.fixVersionTask(), Props.props.fixVersion())
         );
     }
 
     @Test
-    @Order(5)
-    public void createBug() throws InterruptedException {
+    public void createBug() {
         System.out.println("5 Тест создания бага и проведения по всем статусам");
-        jiraPageProject.createBug(typeTask, theme);
 
-        TimeUnit.SECONDS.sleep(3);
-        jiraPageProject.searchTask(theme);
+        Assertions.assertTimeout(Duration.ofSeconds(20), () -> {
+            testStep.checkAuth(Props.props.userLogin(), Props.props.userPassword());
+        });
 
-        jiraCardTask.statusAtWork();
-        TimeUnit.SECONDS.sleep(3);
-        Assertions.assertEquals(jiraCardTask.status().trim().toLowerCase(), "в работе");
+        Assertions.assertTimeout(Duration.ofSeconds(10), () -> {
+            testStep.goProject();
+            testStep.refProject();
+        });
 
-        TimeUnit.SECONDS.sleep(3);
-        jiraCardTask.statusDone();
-        TimeUnit.SECONDS.sleep(3);
-        Assertions.assertEquals(jiraCardTask.status().trim().toLowerCase(), "готово");
+        int countBefore = testStep.taskCount();
+        testStep.createTasks();
+        int countAfter = testStep.taskCount();
+
+        Assertions.assertEquals(countAfter - countBefore, 1);
+
+
+        testStep.goTask(Props.props.nameTask());
+
+        System.out.println("Проверка задачи на статус '" + Props.props.statusTask() + "' и версию '" + Props.props.fixVersion() + "'");
+        Assertions.assertAll("Статус задачи и версия",
+                () -> Assertions.assertEquals(testStep.statusTask(), Props.props.statusTask()),
+                () -> Assertions.assertEquals(testStep.fixVersionTask(), Props.props.fixVersion())
+        );
+
+        testStep.createBug(Props.props.typeTask(), Props.props.theme());
+        WebHooks.Refresh();
+        testStep.goTask(Props.props.theme());
+
+        testStep.statusAtWork();
+        Wait().until(ExpectedConditions.textToBe(testStep.statusTaskBy(), "В РАБОТЕ"));
+        Assertions.assertEquals(testStep.statusTask().toLowerCase(), "в работе");
+
+        testStep.statusDone();
+        Wait().until(ExpectedConditions.textToBe(testStep.statusTaskBy(), "ГОТОВО"));
+        Assertions.assertEquals(testStep.statusTask().toLowerCase(), "готово");
+
 
     }
 }
