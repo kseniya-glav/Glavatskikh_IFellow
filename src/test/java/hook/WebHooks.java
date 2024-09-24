@@ -3,8 +3,8 @@ package hook;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import config.Props;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -15,11 +15,11 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
+
 public class WebHooks {
 
-    @BeforeAll
-    public static void initBrowser() {
-
+    @Given("^пользователь открывает браузер \"([^\"]*)\"$")
+    public void initBrowser(String url) {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--ignore-certificate-errors-spki-list");
         options.addArguments("--start-maximized");
@@ -27,21 +27,25 @@ public class WebHooks {
 
         WebDriver driver = new ChromeDriver(options);
         WebDriverRunner.setWebDriver(driver);
-
-        Selenide.open(Props.props.url());
-
+        Selenide.open(Props.props.getProperty(url));
     }
 
-    public static void Refresh() {
+
+    public void refresh() {
         getWebDriver().navigate().refresh();
     }
 
-    public static WebDriverWait Wait() {
+    public WebDriverWait Wait() {
         return new WebDriverWait(getWebDriver(), Duration.ofSeconds(10));
     }
 
-    @AfterAll
-    public static void closeBrowser() {
+    public String pageUrl() {
+        return getWebDriver().getCurrentUrl();
+    }
+
+    @Then("браузер закрывается")
+    public void closeBrowser() {
         WebDriverRunner.closeWebDriver();
     }
+
 }
