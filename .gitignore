@@ -1,4 +1,4 @@
 /.allure
-/.idea
+.idea
 /build
 /target
