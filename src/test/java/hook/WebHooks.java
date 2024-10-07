@@ -3,8 +3,9 @@ package hook;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import config.Props;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import io.qameta.allure.Step;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -17,8 +18,9 @@ import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 public class WebHooks {
 
-    @BeforeAll
-    public static void initBrowser() {
+    @BeforeEach
+    @Step("Браузер открыт")
+    public void initBrowser() {
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--ignore-certificate-errors-spki-list");
@@ -40,8 +42,9 @@ public class WebHooks {
         return new WebDriverWait(getWebDriver(), Duration.ofSeconds(10));
     }
 
-    @AfterAll
-    public static void closeBrowser() {
+    @AfterEach
+    @Step("Браузер закрыт")
+    public void closeBrowser() {
         WebDriverRunner.closeWebDriver();
     }
 }

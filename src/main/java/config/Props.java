@@ -5,7 +5,7 @@ import org.aeonbits.owner.ConfigFactory;
 
 @Config.LoadPolicy(Config.LoadType.MERGE)
 @Config.Sources({
-        "file:src/test/resource/test.conf"
+        "file:src/test/resource/test.property"
 })
 
 public interface Props extends Config {
@@ -35,5 +35,16 @@ public interface Props extends Config {
     @Key("typeTask")
     String typeTask();
 
+    @Key("project")
+    String curProject();
+
+    @Key("nameCreateTask")
+    String nameCreateTask();
+
+    @Key("atWork")
+    String atWork();
+
+    @Key("done")
+    String done();
 
 }

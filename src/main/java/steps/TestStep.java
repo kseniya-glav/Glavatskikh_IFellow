@@ -1,5 +1,6 @@
 package steps;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import pages.JiraCardTask;
 import pages.JiraPageAuth;
@@ -11,53 +12,60 @@ public class TestStep {
     private final JiraPageProject jiraPageProject = new JiraPageProject();
     private final JiraCardTask jiraCardTask = new JiraCardTask();
 
+    @Step("Вход в аккаунт")
     public void checkAuth(String login, String password) {
         jiraPageAuth.inputUserName(login);
         jiraPageAuth.inputUserPass(password);
         jiraPageAuth.inputLogin();
     }
 
-    public void goProject() {
-        jiraPageProject.refProject();
+    @Step("Переход к проекту")
+    public void goProject(String name) {
+        jiraPageProject.refProject(name);
     }
 
-    public void createTasks() {
-        jiraPageProject.createTasks();
+    @Step("Создание задачи")
+    public void createTasks(String name) {
+        jiraPageProject.createTasks(name);
 
     }
 
+    @Step("Переход к задаче")
     public void goTask(String nameTask) {
         jiraPageProject.searchTask(nameTask);
     }
 
+    @Step("Статус задачи")
     public String statusTask() {
         return jiraCardTask.status().trim();
     }
 
+    @Step("Версия задачи")
     public String fixVersionTask() {
         return jiraCardTask.fixVersion().trim();
     }
 
+    @Step("Создание бага")
     public void createBug(String typeTask, String theme) {
         jiraPageProject.createBug(typeTask, theme);
     }
 
+    @Step("Перевод задачи в статус 'В работе'")
     public void statusAtWork() {
         jiraCardTask.statusAtWork();
     }
 
+    @Step("Перевод задачи в статус 'Готово'")
     public void statusDone() {
         jiraCardTask.statusDone();
     }
 
+    @Step("Ожидание изменения статуса")
     public By statusTaskBy() {
         return jiraCardTask.statusTaskBy();
     }
 
-    public void refProject() {
-        jiraPageProject.refProject();
-    }
-
+    @Step("Количество задач")
     public int taskCount() {
         return jiraPageProject.taskCount();
     }
