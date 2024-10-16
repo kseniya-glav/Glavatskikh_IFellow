@@ -12,9 +12,7 @@ import steps.TestStep;
 
 import java.time.Duration;
 
-
 public class RunTest extends WebHooks {
-
 
     private final TestStep testStep = new TestStep();
 
@@ -98,7 +96,6 @@ public class RunTest extends WebHooks {
         testStep.statusDone();
         Wait().until(ExpectedConditions.textToBe(testStep.statusTaskBy(), Props.props.done()));
         Assertions.assertEquals(testStep.statusTask().toLowerCase(), Props.props.done().toLowerCase());
-
 
     }
 }

@@ -5,7 +5,7 @@ import org.aeonbits.owner.ConfigFactory;
 
 @Config.LoadPolicy(Config.LoadType.MERGE)
 @Config.Sources({
-        "file:src/test/resource/test.property"
+        "file:src/test/resources/test.property"
 })
 
 public interface Props extends Config {
@@ -47,4 +47,6 @@ public interface Props extends Config {
     @Key("done")
     String done();
 
+    @Key("path_chromedriver")
+    String pathChromeDriver();
 }

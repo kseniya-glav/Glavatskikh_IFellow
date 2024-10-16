@@ -3,7 +3,6 @@ package pages;
 import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.sleep;
 
 public class JiraPageProject {
 
@@ -34,7 +33,6 @@ public class JiraPageProject {
     }
 
     public int taskCount() {
-
         return Integer.parseInt(tasks.innerText().split(" ")[2]);
     }
 
@@ -45,23 +43,17 @@ public class JiraPageProject {
         inputDesc.setValue(name);
         inputDesc.pressEnter();
         tabTasks.click();
-
     }
 
     public void searchTask(String str) {
         inputSearch.setValue(str);
-        sleep(2000);
         res(str).click();
     }
-
 
     public void createBug(String status, String theme) {
         navCreate.click();
         JiraFormCreateTask formCreateTask = new JiraFormCreateTask();
-
         formCreateTask.createTask(status, theme);
-
     }
-
 
 }
