@@ -1,4 +1,4 @@
-﻿# IFellow_HomeWork_6
+﻿# IFellow_HomeWork_UI
 
 ### Тема: `Тестирование кейса c генерацией отчёта`
 
