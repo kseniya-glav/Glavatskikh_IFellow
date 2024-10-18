@@ -5,7 +5,7 @@ import org.aeonbits.owner.ConfigFactory;
 
 @Config.LoadPolicy(Config.LoadType.MERGE)
 @Config.Sources({
-        "file:src/test/resources/test.conf"
+        "file:src/test/resources/test.property"
 })
 
 public interface Props extends Config {
@@ -29,4 +29,7 @@ public interface Props extends Config {
     @Key("newJob")
     String newJob();
 
+    default String getProperty(String key) {
+        return props.getProperty(key);
+    }
 }

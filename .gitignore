@@ -1,0 +1,5 @@
+/.allure
+/allure-results
+/.idea
+/build
+/target

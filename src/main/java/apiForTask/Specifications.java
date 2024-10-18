@@ -1,5 +1,6 @@
 package apiForTask;
 
+import io.qameta.allure.Step;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -13,6 +14,7 @@ import static org.hamcrest.Matchers.is;
 
 public class Specifications {
 
+    @Step("Отправка запроса")
     public static RequestSpecification baseRequestSpec(String url) {
         return new RequestSpecBuilder()
                 .setBaseUri(url)
@@ -20,6 +22,7 @@ public class Specifications {
                 .build();
     }
 
+    @Step("Статус код 200 || 201")
     public static ResponseSpecification baseResponseSpecSuccess() {
         return new ResponseSpecBuilder()
                 .expectStatusCode(anyOf(is(200), is(201)))

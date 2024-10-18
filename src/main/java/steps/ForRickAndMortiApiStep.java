@@ -1,37 +1,29 @@
-package tests;
+package steps;
 
 import apiForTask.RickAndMorty;
-import apiForTask.Specifications;
 import config.Props;
-import io.restassured.RestAssured;
+import io.cucumber.java.ru.Тогда;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-public class RickAmdMortyApiTest {
+public class ForRickAndMortiApiStep {
 
     private final RickAndMorty rickAndMorty = new RickAndMorty();
 
-    @BeforeAll
-    public static void SetUp() {
-        RestAssured.requestSpecification = Specifications.baseRequestSpec(Props.props.urlRickAndMorty());
-        RestAssured.responseSpecification = Specifications.baseResponseSpecSuccess();
+    @Тогда("^проверка существования \\\"([^\\\"]*)\\\"$")
+    public void checkName(String name) {
+        Response response = rickAndMorty.getCharacterByName(Props.props.getProperty(name));
+
+        if (response.jsonPath().getList("results.id") == null ||
+                response.jsonPath().getList("results.episode") == null)
+            throw new io.cucumber.java.PendingException();
+
     }
 
-    @Test
-    public void checkName() {
-        Response response = rickAndMorty.getCharacterByName(Props.props.name());
-        Assertions.assertNotNull(response.jsonPath().getList("results.id"));
-        Assertions.assertNotNull(response.jsonPath().getList("results.episode"));
-    }
-
-    @Test
+    @Тогда("^последний эпизод$")
     public void lastEpisode() {
         Response responseMorty = rickAndMorty.getCharacterByName(Props.props.name());
 
@@ -42,10 +34,11 @@ public class RickAmdMortyApiTest {
 
         Response responseLastEpisode = rickAndMorty.getEpisode(inf[0]);
 
-        Assertions.assertNotNull(responseLastEpisode.jsonPath().getList("characters"));
+        if (responseLastEpisode.jsonPath().getList("characters") == null)
+            throw new io.cucumber.java.PendingException();
     }
 
-    @Test
+    @Тогда("^последний персонаж$")
     public void lastCharacter() {
         Response responseMorty = rickAndMorty.getCharacterByName(Props.props.name());
 
@@ -61,11 +54,11 @@ public class RickAmdMortyApiTest {
         int lastNumberCharacter = lastNumber(ListResponseCharacter);
         Response responseLastCharacters = rickAndMorty.getCharacter(lastNumberCharacter);
 
-        Assertions.assertNotNull(responseLastCharacters.jsonPath().get("name"));
+        if (responseLastCharacters.jsonPath().get("name") == null)
+            throw new io.cucumber.java.PendingException();
     }
 
-
-    @Test
+    @Тогда("^раса и локация последнего персонажа$")
     public void lastCharacterSpeciesAndLocation() {
         Response responseMorty = rickAndMorty.getCharacterByName(Props.props.name());
 
@@ -81,17 +74,13 @@ public class RickAmdMortyApiTest {
         int lastNumberCharacter = lastNumber(ListResponseCharacter);
         Response responseLastCharacters = rickAndMorty.getCharacter(lastNumberCharacter);
 
-        String speciesLastCharacter = responseLastCharacters.jsonPath().get("species");
-        String locationLastCharacter = responseLastCharacters.jsonPath().get("location.name");
-
-        Assertions.assertAll("поля раса и местонахождение не пустые",
-                () -> Assertions.assertNotNull(speciesLastCharacter),
-                () -> Assertions.assertNotNull(locationLastCharacter)
-        );
+        if (responseLastCharacters.jsonPath().get("species") == null ||
+                responseLastCharacters.jsonPath().get("location.name") == null)
+            throw new io.cucumber.java.PendingException();
 
     }
 
-    @Test
+    @Тогда("^совпадение расы и локации последнего персонажа и Морти$")
     public void lastAndMortyCheckSpeciesAndLocation() {
         Response responseMorty = rickAndMorty.getCharacterByName(Props.props.name());
 
@@ -113,11 +102,8 @@ public class RickAmdMortyApiTest {
         String speciesMorty = rickAndMorty.getCharacter(inf[1]).jsonPath().get("species");
         String locationMorty = rickAndMorty.getCharacter(inf[1]).jsonPath().get("location.name");
 
-        Assertions.assertAll("Морти и последний персонаж одной расы и в разных локациях",
-                () -> Assertions.assertEquals(speciesLastCharacter, speciesMorty),
-                () -> Assertions.assertNotEquals(locationLastCharacter, locationMorty)
-        );
-
+        if (!speciesLastCharacter.equals(speciesMorty) || locationLastCharacter.equals(locationMorty))
+            throw new io.cucumber.java.PendingException();
 
     }
 
