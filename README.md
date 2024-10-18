@@ -4,7 +4,7 @@
 
 Проект содержит два кейса по тестированию двух API с использованием Cucumber и Allure
 
-## Тестовый класс [OneTaskTest](src/test/java/tests/ReqResTest.java)
+## Тестовый класс [ReqResTest](src/test/java/tests/ReqResTest.java)
 
 #### API: [REQRES](https://reqres.in)
 
@@ -16,7 +16,7 @@
 * получение данных по местонахождению и расе персонажа;
 * проверка персонажа на соответствие расы и местонахождение с Морти.
 
-## Тестовый класс [TwoTaskTest](src/test/java/tests/RickAndMortyTest.java)
+## Тестовый класс [RickAndMortyTest](src/test/java/tests/RickAndMortyTest.java)
 
 #### API: [The Rick and Morty API](https://rickandmortyapi.com)
 
