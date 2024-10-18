@@ -1,4 +1,4 @@
-package hw3;
+package tests;
 
 import config.Props;
 import hook.WebHooks;

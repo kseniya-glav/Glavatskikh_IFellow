@@ -13,4 +13,4 @@ nameCreateTask = Тестовый кот
 atWork = В РАБОТЕ
 done = ГОТОВО
 
-#path_chromedriver = src/test/resources/chromedriver.exe
+path_chromedriver = src/test/resources/chromedriver.exe
